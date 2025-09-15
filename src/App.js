@@ -1,32 +1,56 @@
+// src/App.js
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
-import Home from "./components/Home";
-import MyHeart from "./components/MyHeart";
-import AnswerQuestion from "./components/AnswerQuestion";
-import MyLove from "./components/MyLove";
+import Navbar from "./components/Navbar";
+import HeartAnimation from "./components/HeartAnimation";
 
-export default function App() {
+// Pages
+import Home from "./pages/Home";
+import English from "./pages/English";
+import Bangla from "./pages/Bangla";
+import Hindi from "./pages/Hindi";
+import MyHeart from "./pages/MyHeart";
+import QuestionAnswer from "./pages/QuestionAnswer";
+
+function AppWrapper() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
+
+function App() {
   const [showHeart, setShowHeart] = useState(false);
-  const [nextPage, setNextPage] = useState(null);
+  const [navigateTo, setNavigateTo] = useState(null);
 
-  const navigateWithHeart = (navigate, path) => {
+  const handleNavigation = (path) => {
+    setNavigateTo(path);
     setShowHeart(true);
-    setNextPage(() => path);
-    setTimeout(() => {
-      setShowHeart(false);
-      navigate(path);
-    }, 2000); // 2s heart animation
+  };
+
+  const handleHeartEnd = (navigate) => {
+    setShowHeart(false);
+    if (navigate) {
+      navigate(navigateTo);
+      setNavigateTo(null);
+    }
   };
 
   return (
-    <Router>
-      {showHeart && <div className="fullscreen-heart"><div className="heart"></div></div>}
+    <>
+      <Navbar onNavClick={handleNavigation} />
+      {showHeart && <HeartAnimation onAnimationEnd={handleHeartEnd} />}
       <Routes>
-        <Route path="/" element={<Home navigateWithHeart={navigateWithHeart} />} />
-        <Route path="/my-heart" element={<MyHeart />} />
-        <Route path="/answer-question" element={<AnswerQuestion />} />
-        <Route path="/my-love/:lang" element={<MyLove />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/english" element={<English />} />
+        <Route path="/bangla" element={<Bangla />} />
+        <Route path="/hindi" element={<Hindi />} />
+        <Route path="/myheart" element={<MyHeart />} />
+        <Route path="/question" element={<QuestionAnswer />} />
       </Routes>
-    </Router>
+    </>
   );
-       }
+}
+
+export default AppWrapper;
