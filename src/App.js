@@ -1,4 +1,3 @@
-// src/App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -14,8 +13,8 @@ import QuestionAnswer from "./pages/QuestionAnswer";
 function App() {
   return (
     <Router>
-      <HeartAnimation /> {/* Full screen heart animation component */}
-      <Navbar /> {/* Navbar always visible */}
+      <HeartAnimation />
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/english" element={<English />} />
