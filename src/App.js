@@ -1,43 +1,32 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import English from "./pages/English";
-import Bangla from "./pages/Bangla";
-import Hindi from "./pages/Hindi";
-import MyHeart from "./pages/MyHeart";
-import QuestionAnswer from "./pages/QuestionAnswer";
-
-import "./index.css";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import Home from "./components/Home";
+import MyHeart from "./components/MyHeart";
+import AnswerQuestion from "./components/AnswerQuestion";
+import MyLove from "./components/MyLove";
 
 export default function App() {
-  const [route, setRoute] = useState("/");
-  const [showHeartAnimation, setShowHeartAnimation] = useState(false);
+  const [showHeart, setShowHeart] = useState(false);
+  const [nextPage, setNextPage] = useState(null);
 
-  const navigate = (path) => {
-    setShowHeartAnimation(true);
+  const navigateWithHeart = (navigate, path) => {
+    setShowHeart(true);
+    setNextPage(() => path);
     setTimeout(() => {
-      setRoute(path);
-      setShowHeartAnimation(false);
-    }, 1500); // Animation duration
-  };
-
-  const renderPage = () => {
-    switch (route) {
-      case "/": return <Home />;
-      case "/english": return <English />;
-      case "/bangla": return <Bangla />;
-      case "/hindi": return <Hindi />;
-      case "/myheart": return <MyHeart />;
-      case "/question": return <QuestionAnswer />;
-      default: return <Home />;
-    }
+      setShowHeart(false);
+      navigate(path);
+    }, 2000); // 2s heart animation
   };
 
   return (
-    <div className="bg-animate" style={{ minHeight: "100vh", position: "relative" }}>
-      <Navbar navigate={navigate} />
-      {showHeartAnimation && <MyHeart />}
-      {!showHeartAnimation && renderPage()}
-    </div>
+    <Router>
+      {showHeart && <div className="fullscreen-heart"><div className="heart"></div></div>}
+      <Routes>
+        <Route path="/" element={<Home navigateWithHeart={navigateWithHeart} />} />
+        <Route path="/my-heart" element={<MyHeart />} />
+        <Route path="/answer-question" element={<AnswerQuestion />} />
+        <Route path="/my-love/:lang" element={<MyLove />} />
+      </Routes>
+    </Router>
   );
-}
+       }
